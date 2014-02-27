@@ -28,3 +28,11 @@ for child in play_by_play:
 		except:
 			continue
 		
+for child in plays:
+	try:
+		if(child.name == 'dl'):
+			real_play = child
+		except:
+			continue
+			
+
