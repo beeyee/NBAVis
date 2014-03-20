@@ -58,8 +58,12 @@ def extract_play_by_play(filename):
                     arow.append(play_td.string.encode('utf-8','ignore'))
     playbyplay_rows.append(['PERIOD','TIME','SCORE','TEAM','PLAY'])
     playbyplay_rows.reverse()
+    for i in xrange(len(playbyplay_rows)):
+        if(len(playbyplay_rows[i]) == 0):
+            del playbyplay_rows[i]
+        elif(playbyplay_rows[i][2] == '\xc2\xa0'):
+            playbyplay_rows[i][2] = playbyplay_rows[i-1][2]
     csv.writer(results).writerows(playbyplay_rows)
     results.close()
-
 
     
