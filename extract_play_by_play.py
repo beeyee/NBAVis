@@ -53,16 +53,25 @@ def extract_play_by_play(filename):
             for play_td in tag:
                 try:
                     for a in play_td:
-                        arow.append(a.string.encode('utf-8','ignore'))
+                        arow.append(a.string.replace(',', ';').encode('utf-8','ignore'))
                 except:
-                    arow.append(play_td.string.encode('utf-8','ignore'))
+                    arow.append(play_td.string.replace(',', ';').encode('utf-8','ignore'))
     playbyplay_rows.append(['PERIOD','TIME','SCORE','TEAM','PLAY'])
     playbyplay_rows.reverse()
     for i in xrange(len(playbyplay_rows)):
+        for j in xrange(len(playbyplay_rows[i])):
+            playbyplay_rows[i][j].replace(',', ';')
+            
         if(len(playbyplay_rows[i]) == 0):
             del playbyplay_rows[i]
         elif(playbyplay_rows[i][2] == '\xc2\xa0'):
             playbyplay_rows[i][2] = playbyplay_rows[i-1][2]
+            if(playbyplay_rows[i][2] == 'SCORE' ):
+                playbyplay_rows[i][2] = '0-0'
+        elif(playbyplay_rows[i][2].find('End') == 0 ):
+            playbyplay_rows[i].insert(2, playbyplay_rows[i-1][2])
+            playbyplay_rows[i].insert(3, '\xc2\xa0')
+            
     csv.writer(results).writerows(playbyplay_rows)
     results.close()
 
